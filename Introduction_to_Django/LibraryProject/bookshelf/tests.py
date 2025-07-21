@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Book
 
-# Create your tests here.
+# Tests for the Book model and admin interface
 class AdminTest(TestCase):
     def setUp(self):
         self.admin = User.objects.create_superuser(
