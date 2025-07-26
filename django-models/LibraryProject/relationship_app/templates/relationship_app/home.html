@@ -1,0 +1,77 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .nav-links {
+            margin: 20px 0;
+        }
+
+        .nav-links a {
+            display: inline-block;
+            margin: 10px 20px 10px 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: #0056b3;
+        }
+
+        .warning {
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to Library Management System</h1>
+    <p>Navigate through the system using the links below:</p>
+
+    <div class="nav-links">
+        <a href="{% url 'list_books' %}">View All Books</a>
+
+        {% if libraries %}
+        {% for library in libraries %}
+        <a href="{% url 'library_detail' library.id %}">View {{ library.name }}</a>
+        {% endfor %}
+        {% else %}
+        <p class="warning">No libraries found in database. Please run the sample data script first.</p>
+        {% endif %}
+
+        <a href="/admin/">Admin Panel</a>
+    </div>
+
+    <h2>System Features:</h2>
+    <ul>
+        <li><strong>View All Books</strong> - See complete list of books with authors</li>
+        <li><strong>Library Details</strong> - View books available in specific libraries</li>
+        <li><strong>Admin Panel</strong> - Manage books, authors, libraries, and librarians</li>
+    </ul>
+
+    {% if not libraries %}
+    <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #d9534f; margin-top: 20px;">
+        <h3>No Data Available</h3>
+        <p>It looks like there's no sample data in your database. To fix this:</p>
+        <ol>
+            <li>Run your <code>query_samples.py</code> script: <code>python query_samples.py</code></li>
+            <li>Or run the management command: <code>python manage.py test_relationships</code></li>
+            <li>Then refresh this page</li>
+        </ol>
+    </div>
+    {% endif %}
+</body>
+
+</html>
