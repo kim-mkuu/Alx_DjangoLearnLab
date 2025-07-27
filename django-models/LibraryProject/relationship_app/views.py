@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .models import Book
-from .models import Library
+from .models import Book, Library
 
 def home(request):
     """
@@ -18,13 +17,12 @@ def list_books(request):
     Function-based view that displays a list of all books in the database.
     Renders book titles and their authors.
     """
-
     books = Book.objects.all() #Get all books from database
     return render(request, 'relationship_app/list_books.html', {'books': books} )
 
 # Class-based view to display library details
 class LibraryDetailView(DetailView):
-    """"
+    """
     Class-based view that displays details for a specific library.
     Shows library name and all books available in that library.
     """
@@ -41,12 +39,12 @@ class LibraryDetailView(DetailView):
         #Explicitly add books to context.
         context['books'] = self.object.books.all()
         return context
-    
-#Authentication views
+
+# Authentication Views
+
 def register_view(request):
     """
-    View to handle user registration.
-    Uses Django's built-in UserCreationForm for user registration.
+    User registration view using Django's built-in UserCreationForm.
     Handles both GET (display form) and POST (process form) requests.
     """
     if request.method == 'POST':
