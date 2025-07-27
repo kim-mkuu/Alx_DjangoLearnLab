@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Book
 from .models import Library
@@ -64,38 +62,3 @@ def register_view(request):
         form = UserCreationForm()
     
     return render(request, 'relationship_app/register.html', {'form': form})
-
-def login_view(request):
-    """
-    User login view using Django's built-in AuthenticationForm.
-    Authenticates user and creates session upon successful login.
-    """
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f'Welcome back, {username}!')
-                # Redirect to next page if specified, otherwise to home
-                next_page = request.GET.get('next', 'home')
-                return redirect(next_page)
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
-    
-    return render(request, 'relationship_app/login.html', {'form': form})
-
-@login_required
-def logout_view(request):
-    """
-    User logout view that ends the user session.
-    Requires user to be logged in (@login_required decorator).
-    """
-    username = request.user.username
-    logout(request)
-    messages.success(request, f'You have been logged out successfully, {username}!')
-    return render(request, 'relationship_app/logout.html')
