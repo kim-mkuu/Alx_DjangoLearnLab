@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
+from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Book, Library
@@ -11,16 +12,14 @@ def home(request):
     libraries = Library.objects.all()
     return render(request, 'relationship_app/home.html', {'libraries': libraries})
 
-#Function-based view to list all books
 def list_books(request):
     """
     Function-based view that displays a list of all books in the database.
     Renders book titles and their authors.
     """
-    books = Book.objects.all() #Get all books from database
-    return render(request, 'relationship_app/list_books.html', {'books': books} )
+    books = Book.objects.all()
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view to display library details
 class LibraryDetailView(DetailView):
     """
     Class-based view that displays details for a specific library.
@@ -36,11 +35,8 @@ class LibraryDetailView(DetailView):
         Ensures all books in the library are available in the template.
         """
         context = super().get_context_data(**kwargs)
-        #Explicitly add books to context.
         context['books'] = self.object.books.all()
         return context
-
-# Authentication Views
 
 def register_view(request):
     """
@@ -52,8 +48,9 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now log in.')
-            return redirect('login')
+            login(request, user)
+            messages.success(request, f'Account created for {username}! You are now logged in.')
+            return redirect('home')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
