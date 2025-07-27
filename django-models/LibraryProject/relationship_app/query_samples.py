@@ -30,10 +30,10 @@ def create_sample_data():
     print(f"Created authors: {author1}, {author2}, {author3}")
     
     # Create books with ForeignKey relationships
-    book1 = Book.objects.create(title="1984", author=author1)
-    book2 = Book.objects.create(title="Animal Farm", author=author1)
-    book3 = Book.objects.create(title="Harry Potter and the Philosopher's Stone", author=author2)
-    book4 = Book.objects.create(title="To Kill a Mockingbird", author=author3)
+    book1 = Book.objects.create(title="1984", author=author1, publication_year=1949)
+    book2 = Book.objects.create(title="Animal Farm", author=author1, publication_year=1945)
+    book3 = Book.objects.create(title="Harry Potter and the Philosopher's Stone", author=author2, publication_year=1997)
+    book4 = Book.objects.create(title="To Kill a Mockingbird", author=author3, publication_year=1960)
     print(f"Created books: {book1}, {book2}, {book3}, {book4}")
     
     # Create libraries
