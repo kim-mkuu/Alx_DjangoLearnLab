@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import Book, Library
+from .models import Book
+from .models import Library
 
 def home(request):
     """
@@ -31,7 +32,7 @@ class LibraryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         """
-        Add additional context data.
+        Add additional context data to the template.
         Ensures all books in the library are available in the template.
         """
         context = super().get_context_data(**kwargs)
