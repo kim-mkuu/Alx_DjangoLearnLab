@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Author, Book, Library, Librarian
+from .models import Author, Book, Library, Librarian, UserProfile
 
 # Author model admin configuration
 @admin.register(Author)
@@ -17,8 +17,8 @@ class BookAdmin(admin.ModelAdmin):
     """
     Admin interface for managing Book model.
     """
-    list_display = ('title', 'author')
-    list_filter = ('author',)
+    list_display = ('title', 'author', 'publication_year')
+    list_filter = ('author', 'publication_year')
     search_fields = ('title', 'author__name')
     ordering = ('title',)
 
@@ -48,3 +48,24 @@ class LibrarianAdmin(admin.ModelAdmin):
     list_filter = ('library',)
     search_fields = ('name', 'library__name')
     ordering = ('name',)
+
+# UserProfile model admin configuration
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    """
+    Admin interface for managing UserProfile model and user roles.
+    """
+    list_display = ('user', 'role', 'user_email', 'date_joined')
+    list_filter = ('role',)
+    search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name')
+    ordering = ('user__username',)
+    
+    def user_email(self, obj):
+        """Display user's email address"""
+        return obj.user.email
+    user_email.short_description = 'Email'
+    
+    def date_joined(self, obj):
+        """Display when user joined"""
+        return obj.user.date_joined.strftime("%Y-%m-%d")
+    date_joined.short_description = 'Date Joined'

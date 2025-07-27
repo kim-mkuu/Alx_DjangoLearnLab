@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,23 +12,20 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
-
         .header {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .auth-section {
             display: flex;
             gap: 10px;
         }
-
         .btn {
             background-color: #007bff;
             color: white;
@@ -39,38 +35,30 @@
             text-decoration: none;
             font-size: 14px;
         }
-
         .btn:hover {
             background-color: #0056b3;
         }
-
         .btn-secondary {
             background-color: #6c757d;
         }
-
         .btn-secondary:hover {
             background-color: #545b62;
         }
-
         .btn-success {
             background-color: #28a745;
         }
-
         .btn-success:hover {
             background-color: #218838;
         }
-
         .container {
             background-color: white;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
         .nav-links {
             margin: 20px 0;
         }
-
         .nav-links a {
             color: #007bff;
             text-decoration: none;
@@ -80,16 +68,13 @@
             border-radius: 4px;
             display: inline-block;
         }
-
         .nav-links a:hover {
             background-color: #007bff;
             color: white;
         }
-
         .library-list {
             margin-top: 30px;
         }
-
         .library-item {
             background-color: #f8f9fa;
             padding: 15px;
@@ -97,30 +82,34 @@
             border-radius: 4px;
             border-left: 4px solid #007bff;
         }
-
         .library-item h3 {
             margin: 0 0 10px 0;
             color: #333;
         }
-
         .user-info {
             color: #28a745;
             font-weight: bold;
         }
     </style>
 </head>
-
 <body>
     <!-- Header with Authentication -->
     <div class="header">
         <h1>Library Project</h1>
         <div class="auth-section">
             {% if user.is_authenticated %}
-            <span class="user-info">Welcome, {{ user.username }}!</span>
-            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+                <span class="user-info">Welcome, {{ user.username }}!</span>
+                {% if user.userprofile.role == 'Admin' %}
+                    <a href="{% url 'admin_view' %}" class="btn">Admin Dashboard</a>
+                {% elif user.userprofile.role == 'Librarian' %}
+                    <a href="{% url 'librarian_view' %}" class="btn">Librarian Portal</a>
+                {% elif user.userprofile.role == 'Member' %}
+                    <a href="{% url 'member_view' %}" class="btn">Member Portal</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
             {% else %}
-            <a href="{% url 'login' %}" class="btn">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-success">Register</a>
+                <a href="{% url 'login' %}" class="btn">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-success">Register</a>
             {% endif %}
         </div>
     </div>
@@ -133,26 +122,25 @@
         <div class="nav-links">
             <a href="{% url 'list_books' %}">View All Books</a>
             {% if user.is_authenticated %}
-            <a href="/admin/">Admin Panel</a>
+                <a href="/admin/">Admin Panel</a>
             {% endif %}
         </div>
 
         <!-- Libraries List -->
         {% if libraries %}
-        <div class="library-list">
-            <h3>Our Libraries:</h3>
-            {% for library in libraries %}
-            <div class="library-item">
-                <h3>{{ library.name }}</h3>
-                <p>Number of books: {{ library.books.count }}</p>
-                <a href="{% url 'library_detail' library.pk %}">View Details</a>
+            <div class="library-list">
+                <h3>Our Libraries:</h3>
+                {% for library in libraries %}
+                    <div class="library-item">
+                        <h3>{{ library.name }}</h3>
+                        <p>Number of books: {{ library.books.count }}</p>
+                        <a href="{% url 'library_detail' library.pk %}">View Details</a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
         {% else %}
-        <p>No libraries available at the moment.</p>
+            <p>No libraries available at the moment.</p>
         {% endif %}
     </div>
 </body>
-
 </html>

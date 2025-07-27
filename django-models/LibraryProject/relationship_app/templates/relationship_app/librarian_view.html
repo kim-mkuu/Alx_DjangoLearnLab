@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Portal - Library Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #17a2b8;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .book-list, .library-list {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+        }
+        .book-item, .library-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .book-item h4, .library-item h4 {
+            margin: 0 0 5px 0;
+            color: #17a2b8;
+        }
+        .btn {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #138496;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .role-badge {
+            background-color: #17a2b8;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .nav-links {
+            margin: 20px 0;
+        }
+        .librarian-tools {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .librarian-tools h3 {
+            color: #0c5460;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>📚 Librarian Portal</h1>
+            <p>Manage books, libraries, and member services</p>
+        </div>
+        <div>
+            <span class="role-badge">{{ role }}</span>
+            <span style="margin-left: 15px; color: #fff;">{{ user.username }}</span>
+        </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="container">
+        <h2>Welcome, Librarian {{ user.username }}!</h2>
+        <p>Manage your library's collection, assist members, and maintain library services efficiently.</p>
+        
+        <!-- Librarian Tools -->
+        <div class="librarian-tools">
+            <h3>🛠️ Librarian Tools</h3>
+            <p>Your available management functions:</p>
+            <ul>
+                <li>Catalog and organize book collections</li>
+                <li>Assist library members with book searches</li>
+                <li>Manage book checkouts and returns</li>
+                <li>Maintain library inventory</li>
+                <li>Generate library reports</li>
+            </ul>
+        </div>
+        
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a href="{% url 'home' %}" class="btn btn-secondary">← Back to Home</a>
+            <a href="{% url 'list_books' %}" class="btn">Manage Books</a>
+            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+        </div>
+    </div>
+
+    <!-- Books and Libraries Management -->
+    <div class="container">
+        <h3>📖 Collection Management</h3>
+        <div class="grid">
+            <!-- Books Section -->
+            <div class="book-list">
+                <h3>📚 Book Collection ({{ books.count }} books)</h3>
+                {% if books %}
+                    {% for book in books %}
+                        <div class="book-item">
+                            <h4>{{ book.title }}</h4>
+                            <p><strong>Author:</strong> {{ book.author.name }}</p>
+                            <p><strong>Year:</strong> {{ book.publication_year }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No books available in the collection.</p>
+                {% endif %}
+            </div>
+            
+            <!-- Libraries Section -->
+            <div class="library-list">
+                <h3>🏛️ Library Locations ({{ libraries.count }} libraries)</h3>
+                {% if libraries %}
+                    {% for library in libraries %}
+                        <div class="library-item">
+                            <h4>{{ library.name }}</h4>
+                            <p><strong>Books:</strong> {{ library.books.count }} books available</p>
+                            <a href="{% url 'library_detail' library.pk %}" class="btn" style="font-size: 12px; padding: 5px 10px;">View Details</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No libraries registered in the system.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Tasks -->
+    <div class="container">
+        <h3>📋 Daily Tasks</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="padding: 15px; background-color: #e9ecef; border-radius: 5px; text-align: center;">
+                <strong>📝 Update Catalog</strong>
+                <br><small>Add new books and update records</small>
+            </div>
+            <div style="padding: 15px; background-color: #e9ecef; border-radius: 5px; text-align: center;">
+                <strong>👥 Member Assistance</strong>
+                <br><small>Help members find resources</small>
+            </div>
+            <div style="padding: 15px; background-color: #e9ecef; border-radius: 5px; text-align: center;">
+                <strong>📊 Inventory Check</strong>
+                <br><small>Verify book availability</small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
