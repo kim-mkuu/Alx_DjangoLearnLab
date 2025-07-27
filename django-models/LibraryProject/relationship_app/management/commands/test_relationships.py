@@ -26,10 +26,10 @@ class Command(BaseCommand):
         
         # Step 2: Create Books (ForeignKey relationship)
         self.stdout.write('\n2. Creating Books with Author relationships...')
-        book1 = Book.objects.create(title="1984", author=author1)
-        book2 = Book.objects.create(title="Animal Farm", author=author1)
-        book3 = Book.objects.create(title="Harry Potter and the Philosopher's Stone", author=author2)
-        book4 = Book.objects.create(title="To Kill a Mockingbird", author=author3)
+        book1 = Book.objects.create(title="1984", author=author1, publication_year=1949)
+        book2 = Book.objects.create(title="Animal Farm", author=author1, publication_year=1945)
+        book3 = Book.objects.create(title="Harry Potter and the Philosopher's Stone", author=author2, publication_year=1997)
+        book4 = Book.objects.create(title="To Kill a Mockingbird", author=author3, publication_year=1960)
         
         self.stdout.write(f"   Created: {book1} by {book1.author}")
         self.stdout.write(f"   Created: {book2} by {book2.author}")
