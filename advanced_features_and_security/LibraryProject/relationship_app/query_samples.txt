@@ -1,0 +1,19 @@
+
+Sample usage :
+if __name__ == "__main__":
+      Create sample data first
+     author = Author.objects.create(name="George Orwell")
+     book = Book.objects.create(title="1984", author=author)
+     library = Library.objects.create(name="Central Library")
+     library.books.add(book)
+     librarian = Librarian.objects.create(name="John Doe", library=library)
+     
+     Test queries
+     books_by_author = query_books_by_author("George Orwell")
+     print(f"Books by George Orwell: {list(books_by_author)}")
+     
+     library_books = list_books_in_library("Central Library")
+     print(f"Books in Central Library: {list(library_books)}")
+     
+     librarian_result = get_librarian_for_library("Central Library")
+     print(f"Librarian for Central Library: {librarian_result}")
