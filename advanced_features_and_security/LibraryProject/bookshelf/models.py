@@ -1,36 +1,34 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-# Custom User Manager
 class CustomUserManager(BaseUserManager):
     """
-    Custom user manager for handling user creation with additional fields.
+    Custom user manager for CustomUser model.
+    Handles user creation with additional fields.
     """
     
-    def create_user(self, username, email, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
         """
-        Create and return a regular user with the given username, email and password.
+        Create and return a regular user with the given username, email, and password.
         """
         if not username:
             raise ValueError('The Username field must be set')
-        if not email:
-            raise ValueError('The Email field must be set')
         
         email = self.normalize_email(email)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
         
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, username, email, password=None, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         """
-        Create and return a superuser with the given username, email and password.
+        Create and return a superuser with the given username, email, and password.
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
         
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -39,7 +37,6 @@ class CustomUserManager(BaseUserManager):
         
         return self.create_user(username, email, password, **extra_fields)
 
-#Custom User Model
 class CustomUser(AbstractUser):
     """
     Custom user model extending Django's AbstractUser.
@@ -60,7 +57,7 @@ class CustomUser(AbstractUser):
         help_text="User's profile photo"
     )
     
-     # Required fields for user creation
+    # Required fields for user creation
     email = models.EmailField(unique=True)
     
     # Use custom manager
