@@ -23,13 +23,23 @@ class Book(models.Model):
     
     class Meta:
         permissions = [
-            ("can_add_book", "Can add book"),
-            ("can_change_book", "Can change book"),
-            ("can_delete_book", "Can delete book"),
+            #Step 1: Define Custom Permissions in models
+            #These permissions control specific actions on Book instances 
+
+            ("can_view", "Can view book"), #View book details
+            ("can_create", "Can create book"),#Add new books
+            ("can_edit", "Can edit book"),#Modify existing books
+            ("can_delete", "Can delete book"),#Remove books
+
+            # Additional granular permissions for enhanced control
+            ("can_view_all_books", "Can view all books"),        # View complete book list
+            ("can_manage_authors", "Can manage book authors"),   # Manage author assignments
+            ("can_bulk_operations", "Can perform bulk operations"), # Bulk edit/delete 
         ]
 
-    def __str__(self):
-        return self.title
+        #Verbose names for better admin interface
+        verbose_name = "Book"
+        verbose_name_plural = "Books"
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
@@ -37,6 +47,13 @@ class Library(models.Model):
     
     def __str__(self):
         return self.name
+    
+    class Meta:
+        permissions = [
+            # Library-specific permissions
+            ("can_manage_library", "Can manage library"),
+            ("can_view_library_stats", "Can view library statistics"),
+        ]
 
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
