@@ -84,14 +84,34 @@ class CustomUser(AbstractUser):
             )
         return None
 
-# Keep the existing Book model from bookshelf app
+# Enhanced Book model with custom permissions for the task
 class Book(models.Model):
     """
     Represents a book with a title, author, and publication year.
+    Step 1: Define Custom Permissions in Models - Enhanced for permissions system
     """
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+    
+    class Meta:
+        permissions = [
+            # Step 1: Define Custom Permissions in Models
+            # These permissions control specific actions on Book instances
+            ("can_view", "Can view book"),           # View book details
+            ("can_create", "Can create book"),       # Add new books  
+            ("can_edit", "Can edit book"),           # Modify existing books
+            ("can_delete", "Can delete book"),       # Remove books
+            
+            # Additional granular permissions for enhanced control
+            ("can_view_all_books", "Can view all books"),        # View complete book list
+            ("can_manage_authors", "Can manage book authors"),   # Manage author assignments
+            ("can_bulk_operations", "Can perform bulk operations"), # Bulk edit/delete
+        ]
+        
+        # Verbose names for better admin interface
+        verbose_name = "Book"
+        verbose_name_plural = "Books"
     
     def __str__(self):
         return f"{self.title} by {self.author} ({self.publication_year})"
