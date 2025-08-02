@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('relationship_app.urls')),  # Root path includes relationship_app URLs
+    path('bookshelf/', include('bookshelf.urls')),  # Bookshelf app URLs with permission protection
 ]
 
 if settings.DEBUG:
