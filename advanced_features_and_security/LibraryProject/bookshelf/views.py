@@ -17,7 +17,8 @@ from django.core.validators import validate_integer
 import logging
 
 from .models import Book
-from .forms import BookForm, ExampleForm
+from .forms import BookForm
+from .forms import ExampleForm
 
 # Configure logging for security events
 logger = logging.getLogger('django.security')
