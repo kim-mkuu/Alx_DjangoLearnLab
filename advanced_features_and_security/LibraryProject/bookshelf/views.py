@@ -1,5 +1,5 @@
 """
-SECURE DATA ACCESS 
+STEP 3: SECURE DATA ACCESS IN VIEWS
 This module implements secure view functions with proper input validation,
 CSRF protection, and SQL injection prevention measures.
 """
@@ -17,7 +17,7 @@ from django.core.validators import validate_integer
 import logging
 
 from .models import Book
-from .forms import BookForm
+from .forms import BookForm, ExampleForm
 
 # Configure logging for security events
 logger = logging.getLogger('django.security')
@@ -344,7 +344,7 @@ def search_books(request):
         messages.error(request, "An error occurred during search.")
         return render(request, 'bookshelf/search_results.html', {'books': [], 'query': ''})
 
-# SECURE API ENDPOINT
+# SECURE API ENDPOINT (if needed)
 @permission_required('bookshelf.can_view_all_books', raise_exception=True)
 @csrf_protect
 @require_http_methods(["GET"])
@@ -377,3 +377,45 @@ def api_books(request):
             'status': 'error',
             'message': 'An error occurred while fetching books.'
         }, status=500)
+
+# SECURE EXAMPLE FORM VIEW
+@csrf_protect
+@require_http_methods(["GET", "POST"])
+def example_form_view(request):
+    """
+    SECURE: Example form view demonstrating CSRF protection and secure form handling.
+    Uses ExampleForm to show security best practices implementation.
+    """
+    if request.method == 'POST':
+        try:
+            # Use Django forms for validation and CSRF protection
+            form = ExampleForm(request.POST)
+            
+            if form.is_valid():
+                # Access cleaned data (already sanitized)
+                name = form.cleaned_data['name']
+                email = form.cleaned_data['email'] 
+                message = form.cleaned_data['message']
+                
+                # Log successful form submission
+                logger.info(f"Example form submitted by: {name} ({email})")
+                
+                # In a real application, save this data or send an email
+                messages.success(request, f'Thank you {name}! Your message has been received.')
+                return redirect('bookshelf:example_form')
+            else:
+                # Log form validation failures
+                logger.warning(f"Invalid example form submission from user: {request.user.username}")
+                messages.error(request, 'Please correct the errors below.')
+                
+        except Exception as e:
+            logger.error(f"Error in example form: {str(e)}")
+            messages.error(request, 'An error occurred while processing your request.')
+    else:
+        form = ExampleForm()
+    
+    context = {
+        'form': form,
+        'title': 'Example Secure Form',
+    }
+    return render(request, 'bookshelf/example_form.html', context)
