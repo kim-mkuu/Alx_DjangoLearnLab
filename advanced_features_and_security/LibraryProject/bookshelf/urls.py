@@ -24,4 +24,7 @@ urlpatterns = [
     
     # Search functionality - requires can_view_all_books permission
     path('search/', views.search_books, name='search_books'),
+
+    #Form example - demonstrates CSRF protection and validation
+    path('form-example/', views.form_example, name='form_example')
 ]

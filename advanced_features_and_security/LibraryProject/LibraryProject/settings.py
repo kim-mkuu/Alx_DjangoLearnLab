@@ -188,21 +188,22 @@ SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 # SECURITY: Additional security headers
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
-# STEP 4: CONTENT SECURITY POLICY (CSP)
+# CONTENT SECURITY POLICY (CSP)
 
 # CSP settings to prevent XSS attacks by controlling resource loading
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")  # Be cautious with 'unsafe-inline'
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net")
-CSP_IMG_SRC = ("'self'", "data:", "https:")
-CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
-CSP_CONNECT_SRC = ("'self'",)
-CSP_FRAME_ANCESTORS = ("'none'",)  # Prevents embedding in frames
-CSP_BASE_URI = ("'self'",)
-CSP_FORM_ACTION = ("'self'",)
-
-# CSP reporting (optional - for monitoring CSP violations)
-# CSP_REPORT_URI = '/csp-report-endpoint/'
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        'base-uri': ("'self'",),
+        'connect-src': ("'self'",),
+        'default-src': ("'self'",),
+        'font-src': ("'self'", 'https://fonts.gstatic.com'),
+        'form-action': ("'self'",),
+        'frame-ancestors': ("'none'",),
+        'img-src': ("'self'", 'data:', 'https:'),
+        'script-src': ("'self'", "'unsafe-inline'"),
+        'style-src': ("'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net')
+    }
+}
 
 # LOGGING CONFIGURATION FOR SECURITY
 

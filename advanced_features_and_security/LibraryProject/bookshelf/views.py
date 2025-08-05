@@ -13,6 +13,7 @@ from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.html import escape
+from django.urls import reverse
 from django.core.validators import validate_integer
 import logging
 
@@ -379,44 +380,25 @@ def api_books(request):
             'message': 'An error occurred while fetching books.'
         }, status=500)
 
-# SECURE EXAMPLE FORM VIEW
 @csrf_protect
-@require_http_methods(["GET", "POST"])
-def example_form_view(request):
+@login_required
+def form_example(request):
     """
-    SECURE: Example form view demonstrating CSRF protection and secure form handling.
-    Uses ExampleForm to show security best practices implementation.
+    SECURE: Example form view demonstrating CSRF protection and validation.
     """
     if request.method == 'POST':
-        try:
-            # Use Django forms for validation and CSRF protection
-            form = ExampleForm(request.POST)
-            
-            if form.is_valid():
-                # Access cleaned data (already sanitized)
-                name = form.cleaned_data['name']
-                email = form.cleaned_data['email'] 
-                message = form.cleaned_data['message']
-                
-                # Log successful form submission
-                logger.info(f"Example form submitted by: {name} ({email})")
-                
-                # In a real application, save this data or send an email
-                messages.success(request, f'Thank you {name}! Your message has been received.')
-                return redirect('bookshelf:example_form')
-            else:
-                # Log form validation failures
-                logger.warning(f"Invalid example form submission from user: {request.user.username}")
-                messages.error(request, 'Please correct the errors below.')
-                
-        except Exception as e:
-            logger.error(f"Error in example form: {str(e)}")
-            messages.error(request, 'An error occurred while processing your request.')
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            logger.info(f"Example form submitted by: {request.user.username}")
+            messages.success(request, "Form submitted successfully!")
+            return redirect('bookshelf:form_example')
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
         form = ExampleForm()
     
     context = {
         'form': form,
-        'title': 'Example Secure Form',
+        'title': 'Example Form - Security Demo'
     }
-    return render(request, 'bookshelf/example_form.html', context)
+    return render(request, 'bookshelf/form_example.html', context)
