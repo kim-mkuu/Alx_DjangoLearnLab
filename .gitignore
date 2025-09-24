@@ -4,4 +4,8 @@ __pycache__/
 db.sqlite3
 .vscode/
 logs/
+venv/
+__init__.py
+requirements.txt
+migrations/
 
